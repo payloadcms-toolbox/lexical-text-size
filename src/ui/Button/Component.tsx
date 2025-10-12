@@ -4,7 +4,7 @@ import {
   $isTextNode,
 } from "@payloadcms/richtext-lexical/lexical";
 import { useLexicalComposerContext } from "@payloadcms/richtext-lexical/lexical/react/LexicalComposerContext";
-import type { MouseEventHandler } from "react";
+import type { ChangeEventHandler, MouseEventHandler } from "react";
 import { Icon } from "../Icon";
 
 export const Button = () => {
@@ -32,16 +32,9 @@ export const Button = () => {
     });
   };
 
-  return (
-    <button
-      type="button"
-      onClick={handleClick}
-      style={{
-        border: "none",
-        backgroundColor: "transparent",
-      }}
-    >
-      <Icon />
-    </button>
-  );
+  const handleChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+    console.info(e.target.value);
+  };
+
+  return <input onChange={handleChange} />;
 };

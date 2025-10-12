@@ -1,7 +1,5 @@
 "use client";
 
-import "./index.css";
-
 import {
   createClientFeature,
   toolbarFeatureButtonsGroupWithItems,
