@@ -5,6 +5,8 @@ import {
 } from "@payloadcms/richtext-lexical/lexical";
 import { useLexicalComposerContext } from "@payloadcms/richtext-lexical/lexical/react/LexicalComposerContext";
 import type { ChangeEventHandler, MouseEventHandler } from "react";
+
+import * as styles from "./styles.css";
 import { Icon } from "../Icon";
 
 export const Button = () => {
@@ -36,5 +38,15 @@ export const Button = () => {
     console.info(e.target.value);
   };
 
-  return <input onChange={handleChange} />;
+  return (
+    <div className={styles.container}>
+      <button type="button" className={styles.btn}>
+        <Icon name="minus" size={18} />
+      </button>
+      <input onChange={handleChange} className={styles.input} />
+      <button type="button" className={styles.btn}>
+        <Icon name="plus" size={18} />
+      </button>
+    </div>
+  );
 };
