@@ -4,13 +4,18 @@ import {
   $isTextNode,
 } from "@payloadcms/richtext-lexical/lexical";
 import { useLexicalComposerContext } from "@payloadcms/richtext-lexical/lexical/react/LexicalComposerContext";
-import type { ChangeEventHandler, MouseEventHandler } from "react";
+import {
+  useState,
+  type ChangeEventHandler,
+  type MouseEventHandler,
+} from "react";
 
 import * as styles from "./styles.css";
 import { Icon } from "../Icon";
 
 export const Button = () => {
   const [editor] = useLexicalComposerContext();
+  const [size, setSize] = useState<string>("16");
 
   const handleClick: MouseEventHandler = (e) => {
     editor.update(() => {
@@ -35,7 +40,9 @@ export const Button = () => {
   };
 
   const handleChange: ChangeEventHandler<HTMLInputElement> = (e) => {
-    console.info(e.target.value);
+    const { value } = e.target;
+
+    setSize(value);
   };
 
   return (
@@ -43,7 +50,7 @@ export const Button = () => {
       <button type="button" className={styles.btn}>
         <Icon name="minus" size={18} />
       </button>
-      <input onChange={handleChange} className={styles.input} />
+      <input value={size} onChange={handleChange} className={styles.input} />
       <button type="button" className={styles.btn}>
         <Icon name="plus" size={18} />
       </button>
