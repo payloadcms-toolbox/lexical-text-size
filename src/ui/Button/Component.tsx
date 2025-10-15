@@ -4,18 +4,28 @@ import {
   $isTextNode,
 } from "@payloadcms/richtext-lexical/lexical";
 import { useLexicalComposerContext } from "@payloadcms/richtext-lexical/lexical/react/LexicalComposerContext";
-import { useState, type ChangeEventHandler } from "react";
+import { useEffect, useState, type ChangeEventHandler } from "react";
 
 import * as styles from "./styles.css";
 import { Icon } from "../Icon";
 
+const sizes = [
+  "40px",
+  "32px",
+  "24px",
+  "18px",
+  "16px",
+  "14px",
+  "14px",
+  "12px",
+  "12px",
+];
+
 export const Button = () => {
   const [editor] = useLexicalComposerContext();
-  const [size, setSize] = useState<string>("16");
+  const [size, setSize] = useState<number>(1);
 
-  const handleChange: ChangeEventHandler<HTMLInputElement> = (e) => {
-    const { value } = e.target;
-
+  useEffect(() => {
     editor.update(() => {
       const selection = $getSelection();
 
@@ -24,11 +34,15 @@ export const Button = () => {
 
         nodes.forEach((node) => {
           if ($isTextNode(node)) {
-            node.setStyle(`font-size: ${value}px`);
+            node.setStyle(`font-size: ${sizes[size]}`);
           }
         });
       }
     });
+  }, [size]);
+
+  const handleChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+    const value = Number.parseInt(e.target.value, 10);
 
     setSize(value);
   };
@@ -36,16 +50,16 @@ export const Button = () => {
   return (
     <div className={styles.container}>
       <button type="button" className={styles.btn}>
-        <Icon name="minus" size={18} />
+        <Icon name="minus" size={16} />
       </button>
       <input
-        value={size}
+        value={sizes[size]}
         onChange={handleChange}
         className={styles.input}
         disabled
       />
       <button type="button" className={styles.btn}>
-        <Icon name="plus" size={18} />
+        <Icon name="plus" size={16} />
       </button>
     </div>
   );
