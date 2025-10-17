@@ -49,16 +49,19 @@ export const Button = () => {
 
   return (
     <div className={styles.container}>
-      <button type="button" className={styles.btn}>
+      <button
+        type="button"
+        className={styles.btn}
+        onClick={() => setSize(size - 1)}
+      >
         <Icon name="minus" size={16} />
       </button>
-      <input
-        value={sizes[size]}
-        onChange={handleChange}
-        className={styles.input}
-        disabled
-      />
-      <button type="button" className={styles.btn}>
+      <input value={sizes[size]} className={styles.input} disabled />
+      <button
+        type="button"
+        className={styles.btn}
+        onClick={() => setSize(size + 1)}
+      >
         <Icon name="plus" size={16} />
       </button>
     </div>
