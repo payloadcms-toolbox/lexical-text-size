@@ -68,7 +68,6 @@ export const Button = () => {
 
   const changeFontSize = useCallback(
     (delta: number) => {
-      console.info("test");
       editor.update(() => {
         const selection = $getSelection();
 
