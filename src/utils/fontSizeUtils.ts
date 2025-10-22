@@ -1,6 +1,20 @@
-import { $isTextNode, type LexicalNode } from "@payloadcms/richtext-lexical/lexical";
+import {
+  $isTextNode,
+  $setState,
+  createState,
+  type LexicalNode,
+} from "@payloadcms/richtext-lexical/lexical";
 
-import { DEFAULT_FONT_SIZE, FONT_SIZE_REGEX, FONT_SIZES, type FontSize } from "./constants";
+import {
+  DEFAULT_FONT_SIZE,
+  FONT_SIZE_REGEX,
+  FONT_SIZES,
+  type FontSize,
+} from "./constants";
+
+const fontSizeIndexState = createState("fontSizeIndex", {
+  parse: (v) => (typeof v === "number" ? v : 0),
+});
 
 /**
  * Extracts font-size value from a CSS style string
@@ -56,11 +70,16 @@ export const getFirstTextNodeFontSize = (nodes: LexicalNode[]): string => {
  * @param nodes - Array of Lexical nodes
  * @param fontSize - Font size to apply
  */
-export const applyFontSizeToNodes = (nodes: LexicalNode[], fontSize: string): void => {
+export const applyFontSizeToNodes = (
+  nodes: LexicalNode[],
+  fontSize: string,
+  index: number,
+): void => {
   nodes.forEach((node) => {
     if ($isTextNode(node)) {
       const newStyle = createStyleWithFontSize(node.getStyle(), fontSize);
       node.setStyle(newStyle);
+      $setState(node, fontSizeIndexState, index);
     }
   });
 };
@@ -71,7 +90,10 @@ export const applyFontSizeToNodes = (nodes: LexicalNode[], fontSize: string): vo
  * @param delta - Change direction (-1 for smaller, 1 for larger)
  * @returns Index of the next font size in FONT_SIZES array
  */
-export const getNextFontSizeIndex = (currentSize: string, delta: number): number => {
+export const getNextFontSizeIndex = (
+  currentSize: string,
+  delta: number,
+): number => {
   const currentIndex = FONT_SIZES.indexOf(currentSize as FontSize);
   const startIndex =
     currentIndex === -1 ? FONT_SIZES.indexOf(DEFAULT_FONT_SIZE) : currentIndex;
