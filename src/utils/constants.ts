@@ -1,12 +1,12 @@
 export const FONT_SIZES = [
-  "40px",
-  "32px",
-  "24px",
-  "18px",
-  "16px",
-  "14px",
-  "12px",
-] as const;
+	"40px",
+	"32px",
+	"24px",
+	"18px",
+	"16px",
+	"14px",
+	"12px",
+];
 
 export const DEFAULT_FONT_SIZE = "16px";
 
