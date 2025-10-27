@@ -5,21 +5,17 @@ import {
 	type LexicalNode,
 } from "@payloadcms/richtext-lexical/lexical";
 
-import {
-	DEFAULT_FONT_SIZE,
-	FONT_SIZE_REGEX,
-	FONT_SIZES,
-	type FontSize,
-} from "./constants";
+import { FONT_SIZE_REGEX } from "./constants";
 
 /**
  * Extracts font-size value from a CSS style string
  * @param style - CSS style string
+ * @param defaultSize - Default font size to return if not found
  * @returns Font size value or default font size
  */
-export const extractFontSize = (style: string): string => {
+export const extractFontSize = (style: string, defaultSize: string): string => {
 	const match = style.match(FONT_SIZE_REGEX);
-	return match ? match[1].trim() : DEFAULT_FONT_SIZE;
+	return match ? match[1].trim() : defaultSize;
 };
 
 /**
@@ -51,16 +47,22 @@ export const createStyleWithFontSize = (
 /**
  * Gets the font size from the first text node in the array
  * @param nodes - Array of Lexical nodes
+ * @param sizes - Array of available font sizes
+ * @param defaultSize - Default font size to return if not found
  * @returns Font size value or default font size
  */
-export const getFirstTextNodeFontSize = (nodes: LexicalNode[]): string => {
+export const getFirstTextNodeFontSize = (
+	nodes: LexicalNode[],
+	sizes: string[],
+	defaultSize: string,
+): string => {
 	for (const node of nodes) {
 		if ($isTextNode(node)) {
-			return extractFontSize(node.getStyle());
+			return extractFontSize(node.getStyle(), defaultSize);
 		}
 	}
 
-	return DEFAULT_FONT_SIZE;
+	return defaultSize;
 };
 
 const fontSizeState = createState("fontSize", {
@@ -71,16 +73,18 @@ const fontSizeState = createState("fontSize", {
  * Applies font size to all text nodes in the array
  * @param nodes - Array of Lexical nodes
  * @param fontSize - Font size to apply
+ * @param sizes - Array of available font sizes
  */
 export const applyFontSizeToNodes = (
 	nodes: LexicalNode[],
 	fontSize: string,
+	sizes: string[],
 ): void => {
 	nodes.forEach((node) => {
 		if ($isTextNode(node)) {
 			const newStyle = createStyleWithFontSize(node.getStyle(), fontSize);
 			node.setStyle(newStyle);
-			$setState(node, fontSizeState, FONT_SIZES.indexOf(fontSize));
+			$setState(node, fontSizeState, sizes.indexOf(fontSize));
 		}
 	});
 };
@@ -89,14 +93,15 @@ export const applyFontSizeToNodes = (
  * Calculates the next font size index based on current size and delta
  * @param currentSize - Current font size value
  * @param delta - Change direction (-1 for smaller, 1 for larger)
- * @returns Index of the next font size in FONT_SIZES array
+ * @param sizes - Array of available font sizes
+ * @returns Index of the next font size in sizes array
  */
 export const getNextFontSizeIndex = (
 	currentSize: string,
 	delta: number,
+	sizes: string[],
 ): number => {
-	const currentIndex = FONT_SIZES.indexOf(currentSize as FontSize);
-	const startIndex =
-		currentIndex === -1 ? FONT_SIZES.indexOf(DEFAULT_FONT_SIZE) : currentIndex;
-	return Math.max(0, Math.min(FONT_SIZES.length - 1, startIndex - delta));
+	const currentIndex = sizes.indexOf(currentSize);
+	const startIndex = currentIndex === -1 ? 0 : currentIndex;
+	return Math.max(0, Math.min(sizes.length - 1, startIndex + delta));
 };

@@ -2,36 +2,38 @@ import {
 	$getSelection,
 	$isRangeSelection,
 	COMMAND_PRIORITY_LOW,
+	type LexicalEditor,
 	SELECTION_CHANGE_COMMAND,
 } from "@payloadcms/richtext-lexical/lexical";
-import { useLexicalComposerContext } from "@payloadcms/richtext-lexical/lexical/react/LexicalComposerContext";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
 	applyFontSizeToNodes,
-	DEFAULT_FONT_SIZE,
-	FONT_SIZES,
-	type FontSize,
 	getFirstTextNodeFontSize,
 	getNextFontSizeIndex,
 } from "../../utils";
 import { Icon } from "../Icon";
 import * as styles from "./styles.css";
 
-export const Button = () => {
-	const [editor] = useLexicalComposerContext();
-	const [currentSize, setCurrentSize] = useState<string>(DEFAULT_FONT_SIZE);
+type Props = {
+	editor: LexicalEditor;
+	sizes: string[];
+	defaultSize: string;
+};
+
+export const Button = ({ editor, sizes, defaultSize }: Props) => {
+	const [currentSize, setCurrentSize] = useState<string>(defaultSize);
 
 	const currentSizeIndex = useMemo(
-		() => FONT_SIZES.indexOf(currentSize as FontSize),
-		[currentSize],
+		() => sizes.indexOf(currentSize),
+		[currentSize, sizes],
 	);
 
-	const isAtMinSize = useMemo(
-		() => currentSizeIndex === FONT_SIZES.length - 1,
-		[currentSizeIndex],
-	);
+	const isAtMinSize = useMemo(() => currentSizeIndex === 0, [currentSizeIndex]);
 
-	const isAtMaxSize = useMemo(() => currentSizeIndex === 0, [currentSizeIndex]);
+	const isAtMaxSize = useMemo(
+		() => currentSizeIndex === sizes.length - 1,
+		[currentSizeIndex, sizes],
+	);
 
 	useEffect(() => {
 		const updateCurrentSize = () => {
@@ -39,7 +41,7 @@ export const Button = () => {
 
 			if ($isRangeSelection(selection)) {
 				const nodes = selection.getNodes();
-				const fontSize = getFirstTextNodeFontSize(nodes);
+				const fontSize = getFirstTextNodeFontSize(nodes, sizes, defaultSize);
 				setCurrentSize(fontSize);
 			}
 		};
@@ -63,7 +65,7 @@ export const Button = () => {
 			unregisterCommand();
 			unregisterUpdateListener();
 		};
-	}, [editor]);
+	}, [editor, sizes, defaultSize]);
 
 	const changeFontSize = useCallback(
 		(delta: number) => {
@@ -72,15 +74,19 @@ export const Button = () => {
 
 				if ($isRangeSelection(selection)) {
 					const nodes = selection.extract();
-					const currentFontSize = getFirstTextNodeFontSize(nodes);
-					const newIndex = getNextFontSizeIndex(currentFontSize, delta);
-					const newSize = FONT_SIZES[newIndex];
+					const currentFontSize = getFirstTextNodeFontSize(
+						nodes,
+						sizes,
+						defaultSize,
+					);
+					const newIndex = getNextFontSizeIndex(currentFontSize, delta, sizes);
+					const newSize = sizes[newIndex];
 
-					applyFontSizeToNodes(nodes, newSize);
+					applyFontSizeToNodes(nodes, newSize, sizes);
 				}
 			});
 		},
-		[editor],
+		[editor, sizes, defaultSize],
 	);
 
 	const handleDecrease = useCallback(

@@ -110,8 +110,8 @@ export default buildConfig({
     features: ({ defaultFeatures }) => [
       ...defaultFeatures,
       TextSizeFeature({
-        sizes: ['small', 'normal', 'large', 'x-large'],
-        defaultSize: 'normal'
+        sizes: ['12px', '14px', '16px', '18px', '24px', '32px'],
+        defaultSize: '16px'
       })
     ]
   }),
@@ -137,8 +137,8 @@ export const Pages = {
         features: ({ defaultFeatures }) => [
           ...defaultFeatures,
           TextSizeFeature({
-            sizes: ['small', 'normal', 'large', 'x-large'],
-            defaultSize: 'normal'
+            sizes: ['12px', '14px', '16px', '18px', '24px', '32px'],
+            defaultSize: '16px'
           })
         ]
       })
@@ -153,26 +153,8 @@ The `TextSizeFeature` function accepts a configuration object with the following
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
-| `sizes` | `string[]` | `['small', 'normal', 'large']` | Array of available text sizes shown in the dropdown |
-| `defaultSize` | `string` | `'normal'` | Default size applied to text. Must be one of the values in `sizes` |
-| `labels` | `Record<string, string>` | Auto-generated | Custom labels for size options in the UI |
-| `customSizeMap` | `Record<string, string>` | See below | Map size names to CSS values (font-size) |
-
-### Default Size Mapping
-
-By default, sizes are mapped to CSS values as follows:
-
-```ts
-{
-  'x-small': '0.75rem',   // 12px
-  'small': '0.875rem',    // 14px
-  'normal': '1rem',       // 16px
-  'medium': '1.125rem',   // 18px
-  'large': '1.25rem',     // 20px
-  'x-large': '1.5rem',    // 24px
-  'xx-large': '2rem'      // 32px
-}
-```
+| `sizes` | `string[]` | `['6px', '8px', '10px', '12px', '14px', '16px', '18px', '20px', '24px', '28px', '32px', '36px', '40px', '48px', '56px', '64px', '72px']` | Array of available text sizes. Must be valid CSS font-size values (e.g., `'16px'`, `'1rem'`, `'1.5em'`). Array is ordered from smallest to largest. |
+| `defaultSize` | `string` | First element of `sizes` array | Default size applied to text. Must be one of the values in the `sizes` array. If not provided or invalid, the first element of `sizes` will be used. |
 
 ## API Reference
 
@@ -187,9 +169,19 @@ Creates a text size feature for the Lexical editor.
 
 **Example:**
 ```ts
+// Default configuration (no parameters needed)
+TextSizeFeature()
+
+// Custom sizes
 TextSizeFeature({
-  sizes: ['small', 'medium', 'large'],
-  defaultSize: 'medium'
+  sizes: ['12px', '16px', '20px', '24px'],
+  defaultSize: '16px'
+})
+
+// Using rem units
+TextSizeFeature({
+  sizes: ['0.75rem', '1rem', '1.25rem', '1.5rem'],
+  defaultSize: '1rem'
 })
 ```
 
@@ -230,22 +222,31 @@ console.log(currentSize) // 'large'
 
 ### Custom Size Values
 
-Define your own custom sizes with specific CSS values:
+Define your own custom sizes with any valid CSS font-size values:
 
 ```ts
+// Using px units
 TextSizeFeature({
-  sizes: ['tiny', 'base', 'huge'],
-  defaultSize: 'base',
-  customSizeMap: {
-    'tiny': '0.625rem',    // 10px
-    'base': '1rem',        // 16px
-    'huge': '3rem'         // 48px
-  },
-  labels: {
-    'tiny': 'Tiny Text',
-    'base': 'Normal',
-    'huge': 'Huge Title'
-  }
+  sizes: ['10px', '12px', '14px', '16px', '18px', '24px', '32px', '48px'],
+  defaultSize: '16px'
+})
+
+// Using rem units (recommended for accessibility)
+TextSizeFeature({
+  sizes: ['0.625rem', '0.75rem', '0.875rem', '1rem', '1.125rem', '1.5rem', '2rem', '3rem'],
+  defaultSize: '1rem'
+})
+
+// Using em units
+TextSizeFeature({
+  sizes: ['0.75em', '1em', '1.25em', '1.5em', '2em'],
+  defaultSize: '1em'
+})
+
+// Mixed units (not recommended, but supported)
+TextSizeFeature({
+  sizes: ['12px', '1rem', '1.25rem', '24px', '2rem'],
+  defaultSize: '1rem'
 })
 ```
 
@@ -388,15 +389,16 @@ The package includes migration utilities. See the [migration guide](./docs/MIGRA
 
 ### Can I use rem, px, em, or other CSS units?
 
-Yes! The `customSizeMap` accepts any valid CSS font-size value:
+Yes! The `sizes` array accepts any valid CSS font-size value:
 
 ```ts
-customSizeMap: {
-  'small': '14px',
-  'medium': '1.2em',
-  'large': '2rem'
-}
+TextSizeFeature({
+  sizes: ['14px', '1.2em', '2rem', '18pt'],
+  defaultSize: '14px'
+})
 ```
+
+We recommend using `rem` units for better accessibility and consistent scaling across your application.
 
 ### Does this work with dark mode?
 
