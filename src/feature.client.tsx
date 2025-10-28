@@ -2,6 +2,7 @@ import {
 	createClientFeature,
 	toolbarFeatureButtonsGroupWithItems,
 } from "@payloadcms/richtext-lexical/client";
+import type { LexicalEditor } from "@payloadcms/richtext-lexical/lexical";
 
 import type { TextSizeClientFeatureProps } from "./types";
 import { Button } from "./ui/Button";
@@ -11,8 +12,8 @@ export const TextSizeFeatureClient =
 		const { sizes, defaultSize } = props;
 
 		const ButtonWithProps = (buttonProps: {
-			editor: any;
-			anchorElem?: any;
+			editor: LexicalEditor;
+			anchorElem?: HTMLElement;
 			active?: boolean;
 			enabled?: boolean;
 		}) => {

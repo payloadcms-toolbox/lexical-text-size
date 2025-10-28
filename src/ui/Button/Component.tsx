@@ -70,7 +70,7 @@ export const Button = ({ editor, sizes, defaultSize }: Props) => {
 			unregisterCommand();
 			unregisterUpdateListener();
 		};
-	}, [editor, sizes, defaultSize]);
+	}, [editor, defaultSize]);
 
 	const changeFontSize = useCallback(
 		(delta: number) => {

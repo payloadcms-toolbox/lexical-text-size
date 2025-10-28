@@ -30,7 +30,10 @@ export const Icon: FC<Props> = ({ name, size = "24" }) => (
 		strokeWidth="2"
 		strokeLinecap="round"
 		strokeLinejoin="round"
+		role="img"
+		aria-label={name}
 	>
+		<title>{name}</title>
 		{icons[name]}
 	</svg>
 );
