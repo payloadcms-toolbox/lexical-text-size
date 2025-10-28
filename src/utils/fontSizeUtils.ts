@@ -1,8 +1,8 @@
 import {
-	$isTextNode,
-	$setState,
-	createState,
-	type LexicalNode,
+  $isTextNode,
+  $setState,
+  createState,
+  type LexicalNode,
 } from "@payloadcms/richtext-lexical/lexical";
 
 import { FONT_SIZE_REGEX } from "./constants";
@@ -14,8 +14,8 @@ import { FONT_SIZE_REGEX } from "./constants";
  * @returns Font size value or default font size
  */
 export const extractFontSize = (style: string, defaultSize: string): string => {
-	const match = style.match(FONT_SIZE_REGEX);
-	return match ? match[1].trim() : defaultSize;
+  const match = style.match(FONT_SIZE_REGEX);
+  return match ? match[1].trim() : defaultSize;
 };
 
 /**
@@ -24,7 +24,7 @@ export const extractFontSize = (style: string, defaultSize: string): string => {
  * @returns Style string without font-size property
  */
 export const removeFontSizeFromStyle = (style: string): string => {
-	return style.replace(/font-size:\s*[^;]+;?\s*/g, "").trim();
+  return style.replace(/font-size:\s*[^;]+;?\s*/g, "").trim();
 };
 
 /**
@@ -34,14 +34,14 @@ export const removeFontSizeFromStyle = (style: string): string => {
  * @returns New style string with font-size property
  */
 export const createStyleWithFontSize = (
-	currentStyle: string,
-	fontSize: string,
+  currentStyle: string,
+  fontSize: string,
 ): string => {
-	const styleWithoutFontSize = removeFontSizeFromStyle(currentStyle);
+  const styleWithoutFontSize = removeFontSizeFromStyle(currentStyle);
 
-	return styleWithoutFontSize
-		? `${styleWithoutFontSize}; font-size: ${fontSize}`
-		: `font-size: ${fontSize}`;
+  return styleWithoutFontSize
+    ? `${styleWithoutFontSize}; font-size: ${fontSize}`
+    : `font-size: ${fontSize}`;
 };
 
 /**
@@ -49,24 +49,29 @@ export const createStyleWithFontSize = (
  * @param nodes - Array of Lexical nodes
  * @param sizes - Array of available font sizes
  * @param defaultSize - Default font size to return if not found
+ * @param selectionStyle - Optional selection style to check when no text nodes found
  * @returns Font size value or default font size
  */
 export const getFirstTextNodeFontSize = (
-	nodes: LexicalNode[],
-	sizes: string[],
-	defaultSize: string,
+  nodes: LexicalNode[],
+  defaultSize: string,
+  selectionStyle?: string,
 ): string => {
-	for (const node of nodes) {
-		if ($isTextNode(node)) {
-			return extractFontSize(node.getStyle(), defaultSize);
-		}
-	}
+  for (const node of nodes) {
+    if ($isTextNode(node)) {
+      return extractFontSize(node.getStyle(), defaultSize);
+    }
+  }
 
-	return defaultSize;
+  if (selectionStyle) {
+    return extractFontSize(selectionStyle, defaultSize);
+  }
+
+  return defaultSize;
 };
 
 const fontSizeState = createState("fontSize", {
-	parse: Number,
+  parse: Number,
 });
 
 /**
@@ -76,17 +81,17 @@ const fontSizeState = createState("fontSize", {
  * @param sizes - Array of available font sizes
  */
 export const applyFontSizeToNodes = (
-	nodes: LexicalNode[],
-	fontSize: string,
-	sizes: string[],
+  nodes: LexicalNode[],
+  fontSize: string,
+  sizes: string[],
 ): void => {
-	nodes.forEach((node) => {
-		if ($isTextNode(node)) {
-			const newStyle = createStyleWithFontSize(node.getStyle(), fontSize);
-			node.setStyle(newStyle);
-			$setState(node, fontSizeState, sizes.indexOf(fontSize));
-		}
-	});
+  nodes.forEach((node) => {
+    if ($isTextNode(node)) {
+      const newStyle = createStyleWithFontSize(node.getStyle(), fontSize);
+      node.setStyle(newStyle);
+      $setState(node, fontSizeState, sizes.indexOf(fontSize));
+    }
+  });
 };
 
 /**
@@ -97,11 +102,11 @@ export const applyFontSizeToNodes = (
  * @returns Index of the next font size in sizes array
  */
 export const getNextFontSizeIndex = (
-	currentSize: string,
-	delta: number,
-	sizes: string[],
+  currentSize: string,
+  delta: number,
+  sizes: string[],
 ): number => {
-	const currentIndex = sizes.indexOf(currentSize);
-	const startIndex = currentIndex === -1 ? 0 : currentIndex;
-	return Math.max(0, Math.min(sizes.length - 1, startIndex + delta));
+  const currentIndex = sizes.indexOf(currentSize);
+  const startIndex = currentIndex === -1 ? 0 : currentIndex;
+  return Math.max(0, Math.min(sizes.length - 1, startIndex + delta));
 };
