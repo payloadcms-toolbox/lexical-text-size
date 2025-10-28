@@ -8,10 +8,8 @@ import { Button } from "./ui/Button";
 
 export const TextSizeFeatureClient =
 	createClientFeature<TextSizeClientFeatureProps>(({ props }) => {
-		// Props are already validated and defaulted by server feature
 		const { sizes, defaultSize } = props;
 
-		// Create a wrapper component that passes sizes and defaultSize to Button
 		const ButtonWithProps = (buttonProps: {
 			editor: any;
 			anchorElem?: any;
