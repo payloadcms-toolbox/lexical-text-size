@@ -1,6 +1,6 @@
 {
 	"name": "@payloadcms-toolbox/lexical-text-size",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"description": "A text size feature for the Payload CMS Lexical editor.",
 	"main": "./dist/index.js",
 	"types": "./dist/index.d.ts",

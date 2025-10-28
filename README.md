@@ -20,24 +20,14 @@ A powerful, type-safe text size management feature for [Lexical](https://lexical
 - [Configuration Options](#configuration-options)
 - [API Reference](#api-reference)
 - [Customization](#customization)
-  - [Custom Size Values](#custom-size-values)
-  - [CSS Styling](#css-styling)
 - [TypeScript](#typescript)
 - [Troubleshooting](#troubleshooting)
 - [FAQ](#faq)
-- [Examples](#examples)
-- [Contributing](#contributing)
 - [License](#license)
 
 ## The Problem
 
-When building content management systems with Payload CMS and Lexical:
-
-- **Inconsistent sizing**: Text size controls are not available out-of-the-box in Lexical
-- **Poor user experience**: Content editors need an intuitive way to adjust text sizes without writing HTML
-- **Maintenance overhead**: Implementing custom text sizing requires understanding Lexical's complex node system
-- **HTML conversion**: Converting between Lexical's internal format and HTML with proper size attributes is non-trivial
-- **TypeScript complexity**: Setting up proper types for custom Lexical features requires deep framework knowledge
+This plugin was created because the built-in TextStateFeature in Payload CMS provides only a generic solution for text styling. There were no ready-made, simple solutions available with familiar UX/UI for text size management specifically. This gap led to the creation of this plugin to provide an intuitive, easy-to-use text sizing feature for content editors.
 
 ## This Solution
 
@@ -185,42 +175,9 @@ TextSizeFeature({
 })
 ```
 
-### `setTextSize(editor, size)`
 
-Programmatically set text size for the current selection.
-
-**Parameters:**
-- `editor`: `LexicalEditor` - The Lexical editor instance
-- `size`: `string` - Size value from your configured sizes
-
-**Example:**
-```ts
-import { setTextSize } from '@payloadcms-toolbox/lexical-text-size'
-
-// In a custom command or plugin
-setTextSize(editor, 'large')
-```
-
-### `getTextSize(editor)`
-
-Get the current text size of the selection.
-
-**Parameters:**
-- `editor`: `LexicalEditor` - The Lexical editor instance
-
-**Returns:** `string | null` - Current size or null if no size is set
-
-**Example:**
-```ts
-import { getTextSize } from '@payloadcms-toolbox/lexical-text-size'
-
-const currentSize = getTextSize(editor)
-console.log(currentSize) // 'large'
-```
 
 ## Customization
-
-### Custom Size Values
 
 Define your own custom sizes with any valid CSS font-size values:
 
@@ -242,92 +199,21 @@ TextSizeFeature({
   sizes: ['0.75em', '1em', '1.25em', '1.5em', '2em'],
   defaultSize: '1em'
 })
-
-// Mixed units (not recommended, but supported)
-TextSizeFeature({
-  sizes: ['12px', '1rem', '1.25rem', '24px', '2rem'],
-  defaultSize: '1rem'
-})
-```
-
-### CSS Styling
-
-The text size feature applies inline styles by default, but you can override them with CSS:
-
-```css
-/* Target specific sizes */
-[data-text-size="small"] {
-  font-size: 0.875rem;
-  line-height: 1.4;
-}
-
-[data-text-size="large"] {
-  font-size: 1.5rem;
-  line-height: 1.6;
-  font-weight: 600;
-}
-
-/* Responsive sizing */
-@media (max-width: 768px) {
-  [data-text-size="x-large"] {
-    font-size: 1.25rem;
-  }
-}
-```
-
-### HTML Output
-
-Text with custom sizes is rendered as:
-
-```html
-<span style="font-size: 1.5rem;">Large text</span>
-```
-
-Or with custom data attributes:
-
-```html
-<span data-text-size="large">Large text</span>
 ```
 
 ## TypeScript
 
 This package is written in TypeScript and provides full type definitions.
 
-### Type Imports
-
-```ts
-import type { 
-  TextSizeFeatureProps,
-  TextSizeOptions,
-  SizeValue 
-} from '@payloadcms-toolbox/lexical-text-size'
-```
-
 ### Type-Safe Configuration
 
 ```ts
 import { TextSizeFeature } from '@payloadcms-toolbox/lexical-text-size'
-import type { TextSizeOptions } from '@payloadcms-toolbox/lexical-text-size'
 
-const config: TextSizeOptions = {
-  sizes: ['small', 'normal', 'large'],
-  defaultSize: 'normal'
-}
-
-TextSizeFeature(config)
-```
-
-### Custom Types
-
-If you extend the feature with custom sizes:
-
-```ts
-type CustomSize = 'tiny' | 'small' | 'base' | 'large' | 'huge'
-
-const config = {
-  sizes: ['tiny', 'small', 'base', 'large', 'huge'] as const,
-  defaultSize: 'base' as const
-}
+TextSizeFeature({
+  sizes: ['12px', '16px', '20px', '24px'],
+  defaultSize: '16px'
+})
 ```
 
 ## Troubleshooting
@@ -383,10 +269,6 @@ module.exports = {
 
 Currently, this package is specifically designed for Payload CMS's Lexical integration. For standalone Lexical, you would need to adapt the feature implementation.
 
-### How do I migrate from an older rich text editor?
-
-The package includes migration utilities. See the [migration guide](./docs/MIGRATION.md) for details.
-
 ### Can I use rem, px, em, or other CSS units?
 
 Yes! The `sizes` array accepts any valid CSS font-size value:
@@ -404,70 +286,14 @@ We recommend using `rem` units for better accessibility and consistent scaling a
 
 Yes, the feature respects Payload CMS's theme settings automatically.
 
-### How do I localize the size labels?
 
-Use the `labels` option or integrate with Payload's i18n system:
-
-```ts
-TextSizeFeature({
-  sizes: ['small', 'large'],
-  labels: {
-    'small': t('sizes.small'),
-    'large': t('sizes.large')
-  }
-})
-```
-
-## Examples
-
-See the [`/examples`](./examples) directory for complete working examples:
-
-- [Basic Usage](./examples/basic)
-- [Custom Sizes](./examples/custom-sizes)
-- [Global Configuration](./examples/global-config)
-- [Per-Field Configuration](./examples/per-field)
-- [Advanced Customization](./examples/advanced)
-
-## Contributing
-
-Contributions are welcome! Please read our [Contributing Guide](./CONTRIBUTING.md) first.
-
-### Development Setup
-
-```bash
-# Clone the repository
-git clone https://github.com/payloadcms-toolbox/lexical-text-size.git
-cd lexical-text-size
-
-# Install dependencies (using pnpm)
-pnpm install
-
-# Build the project
-pnpm run build
-
-# Development mode with watch
-pnpm run dev
-```
-
-### Available Scripts
-
-```bash
-pnpm run build  # Build the project with tsup
-pnpm run dev    # Development mode with watch
-```
 
 ## License
 
-MIT © [Evgenii Troinov](./LICENSE)
+MIT © 2024 Evgenii Troinov
+
+See [LICENSE](./LICENSE) file for details.
 
 ---
 
 Made with ❤️ for the [Payload CMS](https://payloadcms.com/) community
-
-## Links
-
-- [Documentation](https://github.com/payloadcms-toolbox/lexical-text-size#readme)
-- [Issue Tracker](https://github.com/payloadcms-toolbox/lexical-text-size/issues)
-- [NPM Package](https://www.npmjs.com/package/@payloadcms-toolbox/lexical-text-size)
-- [Payload CMS](https://payloadcms.com/)
-- [Lexical](https://lexical.dev/)
