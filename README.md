@@ -7,6 +7,8 @@
 
 A powerful, type-safe text size management feature for [Lexical](https://lexical.dev/) editors in [Payload CMS](https://payloadcms.com/). Provides an intuitive toolbar control for adjusting text sizes with full HTML/CSS conversion support.
 
+![image](./preview.png)
+
 ## Table of Contents
 
 - [The Problem](#the-problem)
