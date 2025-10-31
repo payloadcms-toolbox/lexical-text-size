@@ -161,8 +161,8 @@ Creates a text size feature for the Lexical editor.
 
 **Example:**
 ```ts
-// Default configuration (no parameters needed)
-TextSizeFeature()
+ration (no parameters needed)
+
 
 // Custom sizes
 TextSizeFeature({
@@ -176,8 +176,6 @@ TextSizeFeature({
   defaultSize: '1rem'
 })
 ```
-
-
 
 ## Customization
 
