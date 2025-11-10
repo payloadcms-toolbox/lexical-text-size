@@ -290,7 +290,7 @@ Yes, the feature respects Payload CMS's theme settings automatically.
 
 ## License
 
-MIT © 2024 Evgenii Troinov
+MIT © 2025 Evgenii Troinov
 
 See [LICENSE](./LICENSE) file for details.
 
