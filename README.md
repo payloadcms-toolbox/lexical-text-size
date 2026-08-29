@@ -64,13 +64,9 @@ This plugin was created because the built-in TextStateFeature in Payload CMS pro
 
 ```bash
 npm install @payloadcms-toolbox/lexical-text-size
-```
 
-```bash
 yarn add @payloadcms-toolbox/lexical-text-size
-```
 
-```bash
 pnpm add @payloadcms-toolbox/lexical-text-size
 ```
 
